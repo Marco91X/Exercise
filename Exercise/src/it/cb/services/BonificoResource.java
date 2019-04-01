@@ -82,25 +82,30 @@ public class BonificoResource {
 		if(PROFILE_TEST.equals(profile)) {
 			return mockBonificoVerify();
 		} else {
-			boolean saldoSufficiente = dao.verificaSaldo(idCliente, idConto, bonifico.getImporto().getAmount());
-			if(!saldoSufficiente) {
-				bonificoVerifyRes.setResult(createResult(Risultato.OUTCOME_WARNING, new String[]{"Saldo sul conto non sufficiente per effettuare l'operazione! Inserire un nuovo importo"}));
+			BigDecimal soglia = new BigDecimal(bundle.getString("bonifico.soglia.importo"));
+			if(bonifico.getImporto().getAmount().compareTo(soglia) > 0) {
+				bonificoVerifyRes.setResult(createResult(Risultato.OUTCOME_WARNING, new String[]{"Per disporre un bonifico superiore a " + soglia + " euro, contatta il servizio clienti."}));
 			} else {
-				String transactionId = dao.inserisciRichiestaBonifico(idConto, bonifico);
-				bonificoVerifyRes.setResult(createResult(Risultato.OUTCOME_SUCCESS));
-				Transazione transazione = new Transazione();
-				transazione.setId(transactionId);
-				bonificoVerifyRes.setTransaction(transazione);
-				ImportoTransazione importoTransazione = new ImportoTransazione();
-				Importo importo = new Importo();
-				importo.setAmount(bonifico.getImporto().getAmount());
-				importo.setCurrency(bonifico.getImporto().getCurrency());
-				importoTransazione.setTotalAmount(importo);
-				importo = new Importo();
-				importo.setAmount(new BigDecimal(0));
-				importo.setCurrency(bonifico.getImporto().getCurrency());
-				importoTransazione.setCommissions(importo);
-				bonificoVerifyRes.setData(importoTransazione);
+				boolean saldoSufficiente = dao.verificaSaldo(idCliente, idConto, bonifico.getImporto().getAmount());
+				if(!saldoSufficiente) {
+					bonificoVerifyRes.setResult(createResult(Risultato.OUTCOME_WARNING, new String[]{"Saldo sul conto non sufficiente per effettuare l'operazione! Inserire un nuovo importo"}));
+				} else {
+					String transactionId = dao.inserisciRichiestaBonifico(idConto, bonifico);
+					bonificoVerifyRes.setResult(createResult(Risultato.OUTCOME_SUCCESS));
+					Transazione transazione = new Transazione();
+					transazione.setId(transactionId);
+					bonificoVerifyRes.setTransaction(transazione);
+					ImportoTransazione importoTransazione = new ImportoTransazione();
+					Importo importo = new Importo();
+					importo.setAmount(bonifico.getImporto().getAmount());
+					importo.setCurrency(bonifico.getImporto().getCurrency());
+					importoTransazione.setTotalAmount(importo);
+					importo = new Importo();
+					importo.setAmount(new BigDecimal(0));
+					importo.setCurrency(bonifico.getImporto().getCurrency());
+					importoTransazione.setCommissions(importo);
+					bonificoVerifyRes.setData(importoTransazione);
+				}
 			}
 		}
 		return bonificoVerifyRes;
@@ -161,11 +166,13 @@ public class BonificoResource {
 	 * @return
 	 */
 	private DataBonificoPrepare getDateBonifico() {
+		ResourceBundle bundle = ResourceBundle.getBundle("exercise");
+		int daysToAdd = Integer.valueOf(bundle.getString("bonifico.soglia.tempo"));
 		DataBonificoPrepare data = new DataBonificoPrepare();
 		data.setOggi(new Date());
 		// Oggi + 1 anno
 		Calendar c = Calendar.getInstance();
-		c.add(Calendar.YEAR, 1);
+		c.add(Calendar.DAY_OF_MONTH, daysToAdd);
 		data.setDataLimite(c.getTime());
 		return data;
 	}
