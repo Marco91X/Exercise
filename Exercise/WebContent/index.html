@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Esegui bonifico</title>
+<link rel="shortcut icon" href="">
+</head>
+
+<body>
+
+<form id="datiClienteForm">
+	<div id="sceltaCliente">
+		<h2>Dati cliente</h2>
+
+		<label>Id Cliente:</label>
+		<input id="idCliente" name="idCliente" type="text" required/></br>
+
+		<label>Id Conto:</label>
+		<input id="idConto" name="idConto" type="text" required/></br>
+
+		<button id="btnSceltaCliente">Invia dati</button>
+	</div>
+</form>
+
+<form id="preparaBonificoForm">
+	<div id="preparaBonifico" style="display: none;">
+		<h2>Dati bonifico</h2>
+
+		<ul id="listaMessaggiBonificoVerify"></ul></br>
+
+		<label>Importo:</label>
+		<input id="importo" name="importo" type="number" step="any" min="0" required/></br>
+
+		<label>Valuta:</label>
+		<input id="valuta" name="valuta" type="text" required/></br>
+
+		<label>Data esecuzione (compresa tra <span id="dataBonificoInizio"></span> e <span id="dataBonificoFine"></span>)</label>
+		<input id="dataEsecuzione" name="dataEsecuzione" type="date" required/></br>
+
+		<label>Nome e cognome del beneficiario:</label>
+		<input id="beneficiario" name="beneficiario" type="text" required/></br>
+
+		<label>IBAN beneficiario:</label>
+		<input id="iban" name=""iban"" type="text" required/></br>
+
+		<label>Causale:</label>
+		<input id="causale" name="causale" type="text" required/></br>
+
+		<button id="btnEffettuaBonifico">Effettua bonifico</button>
+	</div>
+</form>
+
+<form id="confermaBonificoForm">
+	<div id="confermaBonifico" style="display: none;">
+		<h2>Conferma bonifico</h2>
+		
+		<label><b>Id Cliente:</b></label></br>
+		<label id="idClienteDato" ></label></br></br>
+
+		<label><b>Id Conto:</b></label></br>
+		<label id="idContoDato" ></label></br></br>
+
+		<label><b>Importo:</b></label></br>
+		<label id="idImportoDato" ></label></br></br>
+
+		<label><b>Commissioni:</b></label></br>
+		<label id="idCommissioniDato" ></label></br></br>
+
+		<label><b>Data esecuzione:</b></label></br>
+		<label id="idDataEsecuzioneDato" ></label></br></br>
+
+		<label><b>Beneficiario:</b></label></br>
+		<label id="idBeneficiarioDato" ></label></br></br>
+
+		<label><b>IBAN:</b></label></br>
+		<label id="idIbanDato" ></label></br></br>
+
+		<label><b>Causale:</b></label></br>
+		<label id="idCausaleDato" ></label></br></br>
+
+		<button id="btnConfermaBonifico">Conferma bonifico</button>
+	</div>
+</form>
+
+<div id="bonificoEseguito" style="display: none;">
+	<h2>Report transazione</h2>
+
+	<ul id="listaMessaggi"></ul></br>
+
+	<label>CRO:</label>
+	<label id="cro" ></label></br>
+	
+	<label>Id transazione:</label>
+	<label id="transazione" ></label>
+</div>
+
+<script src="js/jquery-1.7.1.min.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
